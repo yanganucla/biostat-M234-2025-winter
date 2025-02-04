@@ -1,0 +1,2 @@
+sampleSize sampleMean sigma
+10 176 3

@@ -1,0 +1,38 @@
+
+---
+title: "Bayesian Linear Regression for Stockton Real Estate"
+output: html_document
+---
+
+# Introduction
+
+This report presents a Bayesian linear regression analysis of the Stockton real estate dataset. The objective is to model the relationship between the outcome variable **Y** (home values) and covariates **X1** through **X6** using Bayesian methods implemented via JAGS.
+
+# Data Preparation
+
+The dataset includes observations of home values along with six covariates. We preprocess the data to structure it appropriately for the Bayesian model.
+
+```{r setup, include=FALSE}
+library(knitr)
+library(rjags)
+library(coda)
+source("../src/dataPrep.r")
+```
+
+# Model Execution
+
+```{r}
+source("lmRJags.r")
+```
+
+# Posterior Summary
+
+```{r}
+print(sm)
+print(ciBeta)
+print(ciyFit)
+```
+
+# Conclusion
+
+The Bayesian linear regression model effectively captures the relationships between home values and covariates in the Stockton dataset. The results highlight the significant predictors of home values and provide credible intervals for model predictions.

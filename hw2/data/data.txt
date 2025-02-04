@@ -1,0 +1,2 @@
+sampleSize sampleMean sampleVariance
+10 176 9
