@@ -126,3 +126,5 @@ legend("topleft", legend = paste("Correlation =", round(correlation_result, 3)),
 print(paste("Correlation between Observed Y and Fitted Median Y:", round(correlation_result, 3)))
 
 ```
+
+The scatter plot shows a strong positive correlation (0.896) between the observed and fitted median values, indicating that the model has good predictive accuracy. Most data points are closely aligned with the ideal fit line, suggesting a well-fitted model with minimal bias.
