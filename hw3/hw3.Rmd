@@ -105,4 +105,4 @@ print(paste("95% Confidence Interval for Residual Variance: [",
 5.Residual Variance Estimate and Confidence Interval:
 
 The residual variance estimate (σ²): 54.08
-The estimated 95% confidence interval for residual variance: 52.21
+The estimated 95% confidence interval for residual variance: [38.545 ,  81.382]
