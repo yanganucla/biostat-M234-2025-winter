@@ -2,8 +2,10 @@ rm(list = ls())
 
 library(rjags)
 library(coda)
+set.seed(1234)
 
-source("../src/dataPrep.r")
+source("../src/dataPrepPredictive.r")
+
 
 inits = list(
                 list(beta = rep(0, times=p), tausq=1.0, yFit = rep(0, times=N))
@@ -14,9 +16,10 @@ nChains = 1 ## Number of chains
 nAdapt = 200 ## The initial number of runs to tune parameters
 nBurn = 1000 ## Number of initial runs ("burn" period) for MCMC to converge
 
-modelParameters = c("beta", "tausq", "sigmasq", "yFit")
+modelParameters = c("beta", "tausq", "sigmasq", "yFit", "yPred")
 
-m <- jags.model("../src/modelJags.txt", data=jagsData, inits=inits, n.chains=nChains, n.adapt=nAdapt)
+
+m <- jags.model("../src/modelJagsPredictive.txt", data=jagsData, inits=inits, n.chains=nChains, n.adapt=nAdapt)
 
 update(m, n.iter=nBurn)
 

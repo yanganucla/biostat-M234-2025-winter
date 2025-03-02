@@ -1,9 +1,9 @@
 ---
 title: "Introduction to rjags: A Bayesian linear regression model"
 output: html_document
-date: "Jan-30-2025"
+date: "Feb-28-2025"
 ---
-0. The root directory for this project has 3 folders: "data", "src" and "run". The source Rmd file (this file) is in the "run" directory. The "data" directory contains a dataset from the National Cancer Institute's Surveillance, Epidemiology and End Results (SEER) database. We will regress lung cancer rates from the 58 counties in California on the corresponding smoking rates from each county. The "src" directory includes a file "modelJags.txt" that encodes a Bayesian linear regression model in the JAGS language and an R program called "dataPrep.r" to prepare the data for the JAGS model. 
+0. The root directory for this project has 3 folders: "data", "src" and "run". The source Rmd file (this file) is in the "run" directory. The "data" directory contains the real estate dataset from Stockton, which includes housing attributes. We will use a Bayesian linear regression model to predict housing prices based on these attributes. The "src" directory includes a file "modelJagsPredictive.txt" that encodes a Bayesian linear regression model in the JAGS language and an R program called "dataPrepPredictive.r" to prepare the data for the JAGS model. 
 
 1. Remove all objects from the R workspace---good programming practice and can help debug your code better.
 ```{r}
@@ -14,11 +14,13 @@ rm(list = ls())
 ```{r}
 library(rjags)
 library(coda)
+set.seed(1234)
 ```
 
 3. Prepare the data by running the "dataPrep.r" file in the "src" directory. 
 ```{r}
-source("../src/dataPrep.r")
+source("../src/dataPrepPredictive.r")
+
 ```
 
 4. We initialize the unknown parameters in the JAGS model. 
@@ -38,12 +40,13 @@ nBurn = 1000 ## Number of initial runs ("burn" period) for MCMC to converge
 
 6. Define a set of model parameters for JAGS to recognize
 ```{r}
-modelParameters = c("beta", "tausq", "sigmasq", "yFit")
+modelParameters = c("beta", "tausq", "sigmasq", "yFit", "yPred")
+
 ```
 
 7. Compile the Bayesian model
 ```{r}
-m <- jags.model("../src/modelJags.txt", data=jagsData, inits=inits, n.chains=nChains, n.adapt=nAdapt)
+m <- jags.model("../src/modelJagsPredictive.txt", data=jagsData, inits=inits, n.chains=nChains, n.adapt=nAdapt)
 ```
 
 8. Update the model for the burn-in period

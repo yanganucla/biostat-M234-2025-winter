@@ -6,7 +6,9 @@ This project performs Bayesian predictive modeling using JAGS to estimate the lo
 🚀 How to Run the Analysis
 Simply run the following command in R:
 ```r
-source("lmRJagsPredictive.r")
+source("lmRJagsRmdExec.r")    # Process R Markdown
+source("lmRJagsPurl.r")       # Run Bayesian model in JAGS
+source("lmRJagsPredictive.r") # Generate predictions
 ```
 This will:
 - Load necessary data.

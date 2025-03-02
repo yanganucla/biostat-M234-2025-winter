@@ -5,7 +5,7 @@ library(coda)
 
 set.seed(1234)
 
-source("../src/dataPrep.r")
+source("../src/dataPrepPredictive.r")
 
 inits = list(
 		list(beta = rep(0, times=p), tausq=1.0, yFit = rep(0, times=N))
@@ -21,7 +21,7 @@ modelParameters = c("beta", "tausq", "sigmasq", "yFit")
 #-------
 #Compile
 #-------
-m <- jags.model("../src/modelJags.txt", data=jagsData, inits=inits, n.chains=nChains, n.adapt=nAdapt)
+m <- jags.model("../src/modelJagsPredictive.txt", data=jagsData, inits=inits, n.chains=nChains, n.adapt=nAdapt)
 
 
 #---------------
