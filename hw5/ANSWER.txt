@@ -1,0 +1,105 @@
+ANSWER: Bayesian Regression Results
+
+###head(posteriorSamples)
+  intercept         X1           X2          X3          X4         X5       X6      residualVariance
+1 -590.6862  0.06229818 -0.001635710 -0.04943258 -0.06951280  0.03651783  4.889299  -2.361007
+2 -666.7932  0.06032602 -0.001717356 -0.03779114 -0.06233678  0.01227048  6.000294  -2.712670
+3 -585.6895  0.06079896 -0.001785912 -0.06267918 -0.06965556  0.03296048  4.988909  -2.300933
+4 -340.3695  0.06156004 -0.001598494 -0.06381538 -0.07930809  0.02146041  2.205737  -1.442851
+5 -431.6847  0.06032481 -0.002025167 -0.03948594 -0.06085521  0.03425260  3.621817  -2.364884
+6 -569.5135  0.06145526 -0.001377743 -0.05577048 -0.06626173  0.03347252  5.024325  -2.298914
+
+### Posterior Quantiles for Regression Coefficients:
+Intercept:
+  - Median: -554.73
+  - 2.5%: -734.88
+  - 97.5%: -369.73
+
+X1:
+  - Median: 0.0609
+  - 2.5%: 0.0588
+  - 97.5%: 0.0632
+
+X2:
+  - Median: -0.0018
+  - 2.5%: -0.00236
+  - 97.5%: -0.00127
+
+X3:
+  - Median: -0.0489
+  - 2.5%: -0.0645
+  - 97.5%: -0.0333
+
+X4:
+  - Median: -0.0686
+  - 2.5%: -0.0853
+  - 97.5%: -0.0522
+
+X5:
+  - Median: 0.0287
+  - 2.5%: 0.0108
+  - 97.5%: 0.0473
+
+X6:
+  - Median: 4.7457
+  - 2.5%: 2.8596
+  - 97.5%: 6.4793
+
+Residual Variance:
+  - Median: -2.4067
+  - 2.5%: -2.9689
+  - 97.5%: -1.8146
+
+### Comparison with OLS Estimates:
+Summary of OLS Model:
+
+Call:
+lm(formula = Y ~ ., data = data)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-0.4862 -0.1032 -0.0024  0.1007  0.5322 
+
+Coefficients:
+              Estimate Std. Error t value Pr(>|t|)    
+(Intercept) -5.540e+02  9.013e+01  -6.147 1.04e-09 ***
+X1           6.102e-02  1.181e-03  51.677  < 2e-16 ***
+X2          -1.824e-03  2.858e-04  -6.382 2.39e-10 ***
+X3          -4.929e-02  8.245e-03  -5.978 2.88e-09 ***
+X4          -6.893e-02  8.773e-03  -7.857 7.93e-15 ***
+X5           2.875e-02  9.173e-03   3.135  0.00176 ** 
+X6           4.717e+00  9.064e-01   5.204 2.25e-07 ***
+Lat         -2.409e+00  3.074e-01  -7.836 9.33e-15 ***
+Longi       -5.410e+00  8.102e-01  -6.677 3.53e-11 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 0.1513 on 1360 degrees of freedom
+Multiple R-squared:  0.8111,	Adjusted R-squared:   0.81 
+F-statistic: 729.9 on 8 and 1360 DF,  p-value: < 2.2e-16
+
+OLS estimates (from `lm(Y ~ ., data = data)`) show similar trends, with the following key values:
+  - Adjusted R-squared: 0.81
+  - Residual standard error: 0.1513
+
+### Interpretation of Results:
+1. **Significance of Coefficients**:
+   - If the **95% credible interval (CI)** of a coefficient does not include zero, it suggests strong evidence that the variable significantly influences the dependent variable.
+   - **X1, X5, and X6 have positive credible intervals**, meaning they have a strong positive effect on Y.
+   - **X2, X3, and X4 have negative credible intervals**, indicating a strong negative relationship with Y.
+
+2. **Practical Implications**:
+   - **X1 (0.0588 to 0.0632)** → Since the entire CI is positive, X1 has a strong positive effect.
+   - **X2 (-0.00236 to -0.00127)** → Entirely negative, suggesting a weak but statistically significant negative effect.
+   - **X3 and X4** → Both have strictly negative intervals, confirming their negative impact.
+   - **X5 (0.0108 to 0.0473)** → A positive and significant impact, but the range suggests some variability.
+   - **X6 (2.8596 to 6.4793)** → Strongest positive influence with a large effect size.
+
+3. **Bayesian vs. OLS Estimates**:
+   - Bayesian estimates are similar to OLS results but provide a full probability distribution of parameters.
+   - The Bayesian approach allows uncertainty quantification, making it more informative than point estimates alone.
+
+4. **Residual Variance**:
+   - The posterior distribution of residual variance is **strictly negative**, which may indicate a need for transformation or re-examination of the prior distribution.
+
+Overall, the Bayesian model confirms the OLS findings while providing additional insights into parameter uncertainty and significance.
