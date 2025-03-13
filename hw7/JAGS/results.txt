@@ -1,0 +1,27 @@
+
+# Bayesian Behrens-Fisher Analysis - Results
+
+## 95% Credible Intervals for Group Mean Differences (muDiff)
+- Lower Bound (2.5%): -1.795017
+- Median (50%): 0.1380916
+- Upper Bound (97.5%): 2.103686
+
+### Interpretation:
+- Since **0 is in the credible interval**, the two group means **are significantly different**.
+
+---
+
+## 95% Credible Intervals for Variance Ratio (sigmaSqRatio)
+- Lower Bound (2.5%): 0.1012248
+- Median (50%): 0.2421427
+- Upper Bound (97.5%): 0.5920891
+
+### Interpretation:
+- Since **1 is NOT in the credible interval**, the two variances **are significantly different**.
+
+---
+
+## Conclusion:
+- The Bayesian Behrens-Fisher analysis suggests a **statistically significant difference in variances** not significant in  means between the two groups. The result of mean is a little different with method without use loop.
+
+

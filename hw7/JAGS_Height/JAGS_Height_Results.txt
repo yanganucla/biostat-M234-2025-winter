@@ -1,0 +1,26 @@
+
+# Bayesian Behrens-Fisher Analysis - Height Data
+
+## 95% Credible Intervals for Group Mean Differences (muDiff)
+- Lower Bound (2.5%): -3.2312
+- Median (50%): -1.8181
+- Upper Bound (97.5%): -0.3592
+
+### Interpretation:
+- Since **0 is NOT in the credible interval**, the two group means **are significantly different**.
+
+---
+
+## 95% Credible Intervals for Variance Ratio (sigmaSqRatio)
+- Lower Bound (2.5%): 0.7537
+- Median (50%): 1.5762
+- Upper Bound (97.5%): 3.3009
+
+### Interpretation:
+- Since **1 IS in the credible interval**, the two variances **are NOT significantly different**.
+
+---
+
+## Conclusion:
+- The Bayesian Behrens-Fisher analysis suggests a **statistically significant difference in means** between the two height groups (US vs. Swedish).
+- However, **variance differences are NOT statistically significant**.

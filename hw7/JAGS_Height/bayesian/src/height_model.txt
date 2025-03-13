@@ -1,0 +1,28 @@
+
+model {
+    for (i in 1:n1) {
+        group1[i] ~ dnorm(mu1, tau1)
+    }
+    for (i in 1:n2) {
+        group2[i] ~ dnorm(mu2, tau2)
+    }
+
+    # Priors on means
+    mu1 ~ dnorm(0, 1e-5)
+    mu2 ~ dnorm(0, 1e-5)
+
+    # Priors on precisions (inverse variance)
+    tau1 ~ dgamma(0.001, 0.001)
+    tau2 ~ dgamma(0.001, 0.001)
+
+    # Convert precisions to variances
+    sigmaSq1 <- 1 / tau1
+    sigmaSq2 <- 1 / tau2
+
+    # Compute posterior difference in means
+    muDiff <- mu1 - mu2
+
+    # Compute posterior variance ratio
+    sigmaSqRatio <- sigmaSq1 / sigmaSq2
+}
+
