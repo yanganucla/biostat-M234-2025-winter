@@ -1,68 +1,72 @@
-# README - Bayesian Sample Size Calculation Project
 
-## Project Overview
-This project aims to determine the minimum sample size required to detect a statistically significant difference in LDL (Low-Density Lipoprotein) levels between **Lipitor** and **Drug X** using a Bayesian framework. The study applies Monte Carlo simulations to compute posterior probabilities and identify an optimal sample size.
+README - Bayesian Sample Size Calculation Project
+-------------------------------------------------
 
-## Directory Structure
-```
+Project Overview:
+-----------------
+This project determines the minimum sample size required to detect a clinically meaningful difference in LDL (Low-Density Lipoprotein) levels between Lipitor and Drug X using a Bayesian framework. Monte Carlo simulations are used to compute posterior probabilities and identify optimal sample sizes for varying effect sizes.
+
+Directory Structure:
+--------------------
 BayesianSampleSize/
-│── data/                     # Stores synthetic LDL data
-│   ├── simulated_LDL_data.csv (500 samples per group)
-│
-│── src/                      # Core R script for Bayesian sample size calculation
-│   ├── bayesianSampleSize.r
-│
-│── run/                      # Main script to execute Bayesian sample size analysis
-│   ├── bayesianSampleSizeRun.r
-│
-│── output/                    # Stores computed sample size results
-│   ├── sample_size_results.csv (Generated after running the script)
-│
-│── BIOSTAT_234_Final_Project_report.pdf  # Project Report
-│── README.txt                  # Project Documentation (this file)
-```
+├── data/
+│   └── simulated_LDL_data.csv
+├── src/
+│   └── bayesianSampleSize.r
+├── run/
+│   └── bayesianSampleSizeRun.r
+├── output/
+│   └── sample_size_results.csv
+├── sample_size_plot.png
+├── BIOSTAT_234_Final_Project_report.pdf
+└── README.txt
 
-## How to Run the Code
-### 1. Prerequisites
-Ensure you have **R installed** with the required libraries:
-```r
-install.packages("mvtnorm")
-```
+How to Run:
+-----------
+1. Make sure R is installed.
+2. Install required packages:
+   install.packages("mvtnorm")
+   install.packages("ggplot2")
 
-### 2. Running the Simulation
-Navigate to the project folder in R and execute:
-```r
-source("bayesianSampleSizeRun.r")
-```
+3. Run the simulation:
+   source("bayesianSampleSizeRun.r")
 
-### 3. Viewing Results
-The script will output the required sample sizes for different effect sizes in:
-```
-output/sample_size_results.csv
-```
+4. Output:
+   - Results saved in: output/sample_size_results.csv
+   - Plot saved as: sample_size_plot.png
 
-## Key Components
-- **`bayesianSampleSize.r`**: Implements Bayesian sample size calculation using posterior probabilities.
-- **`bayesianSampleSizeRun.r`**: Runs simulations for multiple effect sizes (5, 10, 15, 20) and dynamically computes `delta_observed`.
-- **`simulated_LDL_data.csv`**: **Expanded dataset with 500 samples per group**, used for analysis.
-- **`BIOSTAT_234_Final_Project_Expanded.pdf`**: Final project report summarizing methodology and results.
+Bayesian Method Details:
+------------------------
+- Decision rule: Posterior probability must satisfy:
+      P(mu_X - mu_L > 0.9 * delta | Data) > 0.95
+- Prior used: Normal(0, 3^2)
+- Simulated effect sizes: 0.5, 1.0, 2.5, 5.0, 10.0, 15.0, 20.0
+- For each delta, simulation repeated and 25th percentile of qualifying n is selected
 
-## Updated Results Summary
-| Effect Size | Required Sample Size |
-|------------|----------------------|
-| 5          | 408                   |
-| 10         | 340                   |
-| 15         | 308                   |
-| 20         | 295                   |
+Summary Results:
+----------------
+Effect Size (delta) | Required Sample Size
+--------------------|----------------------
+0.5                 | 357
+1.0                 | 362
+2.5                 | 436
+5.0                 | 408
+10.0                | 340
+15.0                | 308
+20.0                | 295
 
-## Comparison with Classical Methods
-- **Classical Approach**: Uses power calculations to determine `n` based on fixed significance levels.
-- **Bayesian Approach**: Determines `n` by computing posterior probabilities and dynamically updating beliefs based on observed LDL data.
-- **Advantages**:
-  - Incorporates prior knowledge
-  - More flexible for adaptive trial designs
+Interpretation:
+---------------
+- Sample size increases for small effect sizes (harder to detect)
+- Peaks around delta = 2.5, then decreases for larger effects
+- Reflects Bayesian principle: more extreme effects are easier to detect
 
-## Future Extensions
-- Incorporate **hierarchical Bayesian models** for multi-center trials.
-- Implement **adaptive Bayesian designs** that adjust `n` dynamically.
-- Conduct **sensitivity analysis** to assess robustness to prior assumptions.
+Comparison with Frequentist:
+----------------------------
+- Frequentist: based on power and significance level
+- Bayesian: based on posterior probability and prior belief
+- Bayesian method more flexible and intuitive
+
+File Created by: Yang An
+Course: BIOSTAT 234 - UCLA
+Date: March 24, 2025

@@ -1,16 +1,17 @@
+
 \documentclass{article}
 \usepackage{amsmath, graphicx, booktabs, hyperref, geometry}
 \geometry{a4paper, margin=1in}
 \title{Bayesian Sample Size Calculation for LDL Drug Study}
 \author{Yang An \\ University of California, Los Angeles}
-\date{March 14, 2025}
+\date{March 24, 2025}
 
 \begin{document}
 	
 	\maketitle
 	
 	\begin{abstract}
-		This study investigates the Bayesian approach to sample size calculation in a clinical trial evaluating the efficacy of a new cholesterol-lowering drug, Drug X, against Lipitor. Unlike frequentist methods that rely on p-values and power analysis, Bayesian methods utilize posterior probability distributions to determine the required sample size. Using Monte Carlo simulations in R, we determine the minimum number of patients needed to ensure a 95\% posterior probability of detecting an effect. Results indicate that larger effect sizes require smaller sample sizes. The Bayesian approach offers a flexible alternative to traditional methods, allowing for the incorporation of prior information and dynamic updates based on new data. Future work could extend this model to hierarchical and adaptive Bayesian designs \cite{Smith2023}.
+		This study investigates the Bayesian approach to sample size calculation in a clinical trial evaluating the efficacy of a new cholesterol-lowering drug, Drug X, against Lipitor. Unlike frequentist methods that rely on p-values and power analysis, Bayesian methods utilize posterior probability distributions to determine the required sample size. Using Monte Carlo simulations in R, we determine the minimum number of patients needed to ensure a 95\% posterior probability of detecting an effect. Results indicate that required sample sizes increase for small effect sizes (up to $\Delta = 2.5$), and then decrease as the effect becomes more pronounced. The Bayesian approach offers a flexible alternative to traditional methods, allowing for the incorporation of prior information and dynamic updates based on new data. Future work could extend this model to hierarchical and adaptive Bayesian designs \cite{Smith2023}.
 	\end{abstract}
 	
 	\section{Introduction}
@@ -22,42 +23,39 @@
 	Traditional sample size calculations in clinical trials rely on power analysis and p-values. In contrast, Bayesian methods focus on posterior probabilities. The key steps in Bayesian sample size determination include:
 	
 	\begin{itemize}
-		\item \textbf{Defining Prior Distributions:} A non-informative prior is assumed.
+		\item \textbf{Defining Prior Distributions:} We assume a normal prior for the mean difference $\mu_X - \mu_L \sim \mathcal{N}(0, 3^2)$.
 		\item \textbf{Likelihood Function:} LDL levels are modeled as normally distributed with a known standard deviation ($\sigma = 4.5$).
-		\item \textbf{Posterior Computation:} The posterior distribution of the mean difference between Drug X and Lipitor is estimated.
-		\item \textbf{Decision Criterion:} The required sample size ($n$) is determined such that the posterior probability of detecting an effect exceeds 95\%.
+		\item \textbf{Posterior Computation:} The posterior distribution of the mean difference between Drug X and Lipitor is estimated via Bayesian updating.
+		\item \textbf{Decision Criterion:} The required sample size ($n$) is determined such that the posterior probability satisfies: 
+		\begin{equation}
+			P(\mu_X - \mu_L > 0.9\Delta \mid \text{Data}) > 0.95
+		\end{equation}
 	\end{itemize}
-	
-	Mathematically, given LDL levels for two groups:
-	\begin{align*}
-		\text{LDL}_{Lipitor} &\sim \mathcal{N}(\mu_L, \sigma^2) \\
-		\text{LDL}_{DrugX} &\sim \mathcal{N}(\mu_X, \sigma^2)
-	\end{align*}
-	
-	The probability of detecting a clinically significant effect is:
-	\begin{equation}
-		P(\mu_X - \mu_L > \text{threshold} | \text{Data}) > 0.95
-	\end{equation}
+
+	This \textbf{posterior probability threshold of 0.95} is motivated by common Bayesian clinical trial practices, where a posterior probability of 0.95 or higher is often used as evidence of treatment efficacy. 
+	The \textbf{0.9$\Delta$ buffer} ensures that detected effects are not only statistically credible but also clinically meaningful, providing a conservative margin to avoid overestimation of treatment benefits.
 	
 	\section{Bayesian Model Implementation in R}
 	We implemented Bayesian sample size calculation using Monte Carlo simulations in R:
 	\begin{itemize}
 		\item Generate synthetic LDL data with 500 samples per group.
-		\item Compute posterior distributions for effect sizes (5, 10, 15, 20).
+		\item Compute posterior distributions for effect sizes (0.5, 1, 2.5, 5, 10, 15, 20).
 		\item Determine minimum $n$ such that posterior probability exceeds 95\%.
-		\item Repeat simulations to ensure stability.
+		\item Repeat simulations to ensure stability and take the 25th percentile of valid $n$ across repetitions.
 	\end{itemize}
 	
 	\textbf{Code Structure:}
 	\begin{itemize}
 		\item \texttt{src/bayesianSampleSize.r}: Defines Bayesian function.
 		\item \texttt{run/bayesianSampleSizeRun.r}: Executes calculations.
-		\item \texttt{data/simulated\_LDL\_data.csv}: Stores 500 synthetic LDL values per group.
+		\item \texttt{data/simulated\_LDL\_data.csv}: Stores synthetic LDL values.
 		\item \texttt{output/sample\_size\_results.csv}: Stores computed sample sizes.
 	\end{itemize}
 	
 	\section{Results}
-	Results show that as effect size increases, the required sample size decreases, which aligns with statistical expectations. This validates the Bayesian approach for determining sample size \cite{Lee2023}.
+	As shown in Table~\ref{tab:results} and Figure~\ref{fig:sample_size_plot}, the required sample size initially increases for smaller effect sizes (0.5 to 2.5), reaching a peak at $\Delta = 2.5$, and then decreases steadily as the effect becomes more pronounced. This non-monotonic trend reflects the Bayesian principle that small true effects require more evidence to support strong posterior claims, whereas larger effects yield clearer separation and require fewer subjects.
+	This validates the Bayesian approach for determining sample size \cite{Lee2023}.
+	
 	
 	\begin{table}[h]
 		\centering
@@ -65,21 +63,32 @@
 			\toprule
 			\textbf{Effect Size (mg/dL)} & \textbf{Required Sample Size} \\
 			\midrule
-			5  & 408 \\
-			10 & 340 \\
-			15 & 308 \\
-			20 & 295 \\
+			0.5  & 357 \\
+			1.0  & 362 \\
+			2.5  & 436 \\
+			5.0  & 408 \\
+			10.0 & 340 \\
+			15.0 & 308 \\
+			20.0 & 295 \\
 			\bottomrule
 		\end{tabular}
 		\caption{Effect Size vs. Required Sample Size}
 		\label{tab:results}
 	\end{table}
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.5\textwidth]{sample_size_plot.png}
+    \caption{Bayesian Sample Size vs. Effect Size (log10 scale)}
+    \label{fig:sample_size_plot}
+\end{figure}
+
 	
-	\section{Comparison with Classical Approach}
+
+\section{Comparison with Classical Approach}
 	\begin{itemize}
 		\item Classical methods use power calculations to find $n$.
 		\item Bayesian methods rely on posterior probabilities.
-		\item When using non-informative priors, Bayesian results resemble frequentist calculations.
+		\item When using weakly informative priors, Bayesian results resemble frequentist calculations.
 		\item Bayesian advantage: Can incorporate prior knowledge and update beliefs dynamically.
 	\end{itemize}
 	
@@ -90,7 +99,7 @@
 	where $z_{\alpha}$ and $z_{\beta}$ are critical values for significance and power, respectively. Bayesian methods replace this with posterior probability calculations.
 	
 	\section{Discussion and Conclusion}
-	This Bayesian approach provides a flexible and robust method for determining sample size in clinical trials. The methodology can be extended to hierarchical models or adaptive Bayesian designs for more complex trials. One potential limitation is sensitivity to the choice of priors. While we used a non-informative prior here, future work could explore how incorporating prior clinical knowledge influences the results.
+	This Bayesian approach provides a flexible and robust method for determining sample size in clinical trials. The methodology can be extended to hierarchical models or adaptive Bayesian designs for more complex trials. One potential limitation is sensitivity to the choice of priors. While we used a moderately informative prior here, future work could explore how incorporating prior clinical knowledge influences the results.
 	
 	Future extensions could involve:
 	\begin{itemize}

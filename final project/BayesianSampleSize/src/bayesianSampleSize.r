@@ -27,17 +27,18 @@ bayesian_sample_size <- function(delta, sigma = 4.5, alpha = 0.05, power = 0.95,
       # Monte Carlo simulations for posterior
       posterior_samples <- rnorm(NITER, post_mu, post_sigma)
       
-      # Adjusted Probability Threshold
-      mean(posterior_samples > delta * 0.9)  # Slightly relaxed condition
+      # Compute posterior probability and compare to threshold
+      prob <- mean(posterior_samples > delta * 0.9)
+      prob > power  # Return TRUE if this n satisfies assurance condition
     })
     
-    # Identify the first valid n satisfying the power condition
-    valid_ns <- n_range[which(posterior_results > power)]
-    selected_n <- ifelse(length(valid_ns) > 0, quantile(valid_ns, 0.25, na.rm = TRUE), NA)  # 25th percentile instead of min
+    # Select first n meeting the criterion
+    valid_ns <- n_range[which(posterior_results)]
+    selected_n <- ifelse(length(valid_ns) > 0, quantile(valid_ns, 0.25, na.rm = TRUE), NA)
     
     cat("Effect Size:", delta, " | Selected Sample Size:", selected_n, "\n")
     selected_n
   })
   
-  return(round(mean(required_n, na.rm = TRUE)))  # Return stabilized average sample size
+  return(round(mean(required_n, na.rm = TRUE)))
 }

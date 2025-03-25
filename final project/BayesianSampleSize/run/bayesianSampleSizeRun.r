@@ -20,7 +20,7 @@ delta_observed <- mean(lipitor_data, na.rm = TRUE) - mean(drugX_data, na.rm = TR
 cat("Mean LDL (Lipitor):", mean(lipitor_data, na.rm = TRUE), "| Mean LDL (DrugX):", mean(drugX_data, na.rm = TRUE), "\n")
 
 # Define effect sizes to test
-deltas <- c(5, 10, 15, 20)
+deltas <- c(0.5, 1, 2.5, 5, 10, 15, 20)
 
 # Run Bayesian Sample Size Calculation
 results <- sapply(deltas, bayesian_sample_size)
@@ -31,3 +31,20 @@ write.csv(output_df, "../output/sample_size_results.csv", row.names = FALSE)
 
 # Print results to console
 print(output_df)
+
+# Generate log-scaled visualization
+library(ggplot2)
+library(tibble)
+
+plot_data <- tibble(Effect_Size = deltas, Required_Sample_Size = as.numeric(results))
+
+p <- ggplot(plot_data, aes(x = Effect_Size, y = Required_Sample_Size)) +
+  geom_line(color = "blue", linewidth = 1.2) +
+  geom_point(size = 2) +
+  scale_y_continuous(trans = 'log10') +
+  labs(title = "Bayesian Sample Size vs. Effect Size",
+       x = "True Effect Size (Δ)",
+       y = "Required Sample Size (log10 scale)") +
+  theme_minimal()
+
+print(p)
